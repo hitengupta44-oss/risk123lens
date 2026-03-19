@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RiskLens — Your Report</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .report-page { padding: 6rem 1.5rem 4rem; }
+    .report-container { max-width: 960px; margin: 0 auto; }
+    .report-header { margin-bottom: 2.5rem; }
+    .report-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .report-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 0.5rem; }
+    .meta-badge {
+      background: var(--teal-dim);
+      border: 1px solid rgba(0,212,170,0.3);
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.25rem 0.8rem;
+      border-radius: 999px;
+    }
+    .report-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+    .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    @media(max-width:700px){ .cards-grid { grid-template-columns: 1fr; } }
+
+    /* Print */
+    @media print {
+      .bg-mesh,.orb,nav,.report-actions,#btn-retake { display:none!important; }
+      body { background:#fff; color:#000; }
+      .disease-card { page-break-inside:avoid; border:1px solid #ccc!important; opacity:1!important; transform:none!important; }
+      .risk-bar-fill { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Risk<span>Lens</span></a>
+    <div class="nav-right">
+      <div class="nav-user">
+        <img id="user-photo" src="" alt="" style="display:none"/>
+        <span id="user-name"></span>
+      </div>
+      <button class="btn-signout" id="btn-signout">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="page report-page">
+    <div class="report-container">
+
+      <div class="report-header">
+        <h1>Your Health Risk Report</h1>
+        <div class="report-meta">
+          <span class="meta-badge" id="age-group-badge">—</span>
+          <span class="text-dim" style="font-size:0.85rem" id="report-date"></span>
+        </div>
+        <div class="report-actions">
+          <button class="btn-primary" onclick="window.print()" style="padding:0.6rem 1.4rem;font-size:0.9rem;">⬇ Download PDF</button>
+          <button class="btn-outline" id="btn-retake" style="padding:0.6rem 1.4rem;font-size:0.9rem;">↩ Retake Assessment</button>
+        </div>
+      </div>
+
+      <!-- Summary pills -->
+      <div class="pill-row" id="summary-pills"></div>
+
+      <!-- Disease cards -->
+      <div class="cards-grid" id="cards-grid"></div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { onAuth, logOut } from './js/firebase.js';
+
+    const ICONS = {
+      Diabetes:'🧬', HeartDisease:'❤️', CKD:'💧', Asthma:'🫁', Dyslipidemia:'📊', Anemia:'🩸'
+    };
+    const NAMES = {
+      Diabetes:'Diabetes', HeartDisease:'Heart Disease', CKD:'CKD',
+      Asthma:'Asthma', Dyslipidemia:'Dyslipidemia', Anemia:'Anemia'
+    };
+
+    // Auth guard
+    onAuth(user => {
+      if (!user) { window.location.href = 'login.html'; return; }
+      const photo = document.getElementById('user-photo');
+      const name  = document.getElementById('user-name');
+      if (user.photoURL) { photo.src = user.photoURL; photo.style.display = 'block'; }
+      name.textContent = user.displayName || user.email;
+    });
+
+    document.getElementById('btn-signout').addEventListener('click', async () => {
+      await logOut(); window.location.href = 'login.html';
+    });
+
+    document.getElementById('btn-retake').addEventListener('click', () => {
+      localStorage.removeItem('risklens_report');
+      window.location.href = 'form.html';
+    });
+
+    // Load report
+    const raw = localStorage.getItem('risklens_report');
+    if (!raw) { window.location.href = 'form.html'; }
+
+    const report = JSON.parse(raw);
+    const { age_group, results } = report;
+
+    // Header
+    document.getElementById('age-group-badge').textContent = age_group + ' Adult';
+    document.getElementById('report-date').textContent =
+      'Assessed: ' + new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+
+    // Summary pills
+    const pillRow = document.getElementById('summary-pills');
+    results.forEach(r => {
+      const lvl = r.risk_percent < 40 ? 'low' : r.risk_percent < 60 ? 'medium' : 'high';
+      const pill = document.createElement('span');
+      pill.className = 'pill ' + lvl;
+      pill.textContent = (ICONS[r.disease]||'') + ' ' + (NAMES[r.disease]||r.disease);
+      pillRow.appendChild(pill);
+    });
+
+    // Disease cards
+    const grid = document.getElementById('cards-grid');
+
+    results.forEach((r, i) => {
+      const lvl = r.risk_percent < 40 ? 'low' : r.risk_percent < 60 ? 'medium' : 'high';
+      const cls = lvl === 'low' ? 'risk-low' : lvl === 'medium' ? 'risk-medium' : 'risk-high';
+      const icon = ICONS[r.disease] || '🏥';
+      const name = NAMES[r.disease] || r.disease;
+
+      // Contributing factors HTML
+      const factors = r.contributing_factors || {};
+      const factorRows = Object.entries(factors).map(([f, d]) => {
+        const cls2 = d > 0 ? 'factor-positive' : 'factor-negative';
+        const arrow = d > 0 ? '▲' : '▼';
+        return `<div class="factor-row">
+          <span>${f.replace(/([A-Z])/g,' $1').trim()}</span>
+          <span class="${cls2}">${arrow} ${Math.abs(d).toFixed(1)}%</span>
+        </div>`;
+      }).join('');
+
+      const card = document.createElement('div');
+      card.className = 'disease-card';
+      card.style.transitionDelay = (i * 0.12) + 's';
+      card.innerHTML = `
+        <div class="disease-header">
+          <div class="disease-name">${icon} ${name}</div>
+          <div class="meta-badge">${r.risk_band}%</div>
+        </div>
+        <div class="disease-risk-pct ${cls}" id="pct-${i}">${r.risk_percent}%</div>
+        <div class="risk-bar-track">
+          <div class="risk-bar-fill ${lvl}" id="bar-${i}" style="width:0%"></div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--text-dim);margin-top:0.3rem;">
+          ${lvl === 'low' ? '🟢 Low Risk' : lvl === 'medium' ? '🟡 Moderate Risk' : '🔴 High Risk'}
+        </div>
+        <div class="rec-box">
+          <span>🩺</span>
+          <span>${r.recommendation}</span>
+        </div>
+        <button class="accordion-btn" onclick="toggleAccordion(this)">
+          Why this risk? <span>▾</span>
+        </button>
+        <div class="accordion-content">
+          <div style="padding:0.75rem 0">
+            ${factorRows || '<span style="color:var(--text-dim);font-size:0.82rem">No factor data available.</span>'}
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+
+      // Animate card in after delay
+      setTimeout(() => {
+        card.classList.add('visible');
+        // Animate risk bar
+        setTimeout(() => {
+          document.getElementById('bar-' + i).style.width = Math.min(r.risk_percent, 100) + '%';
+        }, 200);
+      }, i * 120 + 100);
+    });
+
+    // Accordion toggle
+    window.toggleAccordion = (btn) => {
+      const content = btn.nextElementSibling;
+      content.classList.toggle('open');
+      btn.querySelector('span').textContent = content.classList.contains('open') ? '▴' : '▾';
+    };
+  </script>
+</body>
+</html>

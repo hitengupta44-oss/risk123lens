@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RiskLens — AI Health Screener</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 1.5rem 4rem;
+    }
+    .hero-tag {
+      display: inline-block;
+      border: 1px solid var(--teal);
+      color: var(--teal);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 2rem;
+      background: var(--teal-dim);
+      animation: fadeInDown 0.6s ease both;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      animation: fadeInDown 0.7s ease 0.1s both;
+    }
+    .hero h1 span { color: var(--teal); text-shadow: var(--teal-glow); }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      animation: fadeInDown 0.7s ease 0.2s both;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInDown 0.7s ease 0.3s both;
+    }
+    .disease-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 4rem;
+      animation: fadeInDown 0.7s ease 0.4s both;
+    }
+    .disease-pill {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      backdrop-filter: blur(8px);
+      transition: all 0.2s;
+    }
+    .disease-pill:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+
+    /* Feature cards */
+    .features {
+      padding: 5rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .feat-card {
+      padding: 2rem;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      backdrop-filter: blur(16px);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feat-card:hover { border-color: rgba(0,212,170,0.3); transform: translateY(-4px); }
+    .feat-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .feat-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .feat-card p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.7; }
+
+    /* Stats row */
+    .stats { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; padding: 3rem 1.5rem; }
+    .stat { text-align: center; }
+    .stat-num { font-family: var(--font-head); font-size: 2.8rem; font-weight: 800; color: var(--teal); text-shadow: var(--teal-glow); }
+    .stat-label { color: var(--text-dim); font-size: 0.88rem; margin-top: 0.25rem; }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--glass-border);
+    }
+
+    @keyframes fadeInDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+
+    @media(max-width:768px){
+      .features-grid { grid-template-columns: 1fr; }
+      .stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Risk<span>Lens</span></a>
+    <div class="nav-right">
+      <a href="login.html" class="btn-primary" style="padding:0.5rem 1.25rem;font-size:0.9rem;">Get Started</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <section class="hero">
+      <div class="hero-tag">🧬 AI-Powered Health Screening</div>
+      <h1>Know Your <span>Risks.</span><br/>Before They Know You.</h1>
+      <p>RiskLens uses Naive Bayes and Bayesian Networks to screen for 6 major diseases in under 2 minutes.</p>
+      <div class="hero-btns">
+        <a href="login.html" class="btn-primary">Start Free Screening →</a>
+        <a href="#features" class="btn-outline">Learn More</a>
+      </div>
+      <div class="disease-pills">
+        <span class="disease-pill">🧬 Diabetes</span>
+        <span class="disease-pill">❤️ Heart Disease</span>
+        <span class="disease-pill">💧 CKD</span>
+        <span class="disease-pill">🫁 Asthma</span>
+        <span class="disease-pill">🩸 Anemia</span>
+        <span class="disease-pill">📊 Dyslipidemia</span>
+      </div>
+    </section>
+
+    <div class="stats">
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Diseases Screened</div></div>
+      <div class="stat"><div class="stat-num">40K</div><div class="stat-label">Training Records</div></div>
+      <div class="stat"><div class="stat-num">2min</div><div class="stat-label">To Complete</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Free to Use</div></div>
+    </div>
+
+    <section class="features" id="features">
+      <div class="text-center">
+        <div class="hero-tag" style="animation:none">How It Works</div>
+        <h2 style="font-size:2rem;margin-top:1rem;">Built on Real Machine Learning</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🤖</div>
+          <h3>AI-Powered Ensemble</h3>
+          <p>Combines Categorical Naive Bayes and Bayesian Network models, weighted 60/40, for accurate risk prediction.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📊</div>
+          <h3>Instant Risk Report</h3>
+          <p>Get a risk percentage, risk band, doctor recommendation, and contributing factors for each disease.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔒</div>
+          <h3>Secure & Private</h3>
+          <p>Google authentication via Firebase. Your health data is only used for your report and never stored.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>RiskLens © 2025 &nbsp;·&nbsp; Not a substitute for professional medical advice &nbsp;·&nbsp; Built with ❤️</p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { onAuth } from './js/firebase.js';
+    // If already logged in, show different nav
+    onAuth(user => {
+      if (user) {
+        document.querySelector('.nav-right').innerHTML = `
+          <a href="form.html" class="btn-primary" style="padding:0.5rem 1.25rem;font-size:0.9rem;">My Dashboard →</a>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

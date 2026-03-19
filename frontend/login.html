@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RiskLens — Sign In</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      padding: 3rem 2.5rem;
+      text-align: center;
+      animation: scaleIn 0.4s ease both;
+    }
+    .login-logo {
+      font-family: var(--font-head);
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--teal);
+      text-shadow: var(--teal-glow);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.03em;
+    }
+    .login-logo span { color: var(--text); }
+    .login-tagline { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 2.5rem; }
+    .login-title { font-size: 1.4rem; font-family: var(--font-head); font-weight: 700; margin-bottom: 0.5rem; }
+    .login-sub { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 2rem; }
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.9rem 1.5rem;
+      background: #ffffff;
+      color: #1a1a2e;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .btn-google:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+    .btn-google:active { transform: translateY(0); }
+    .btn-google svg { flex-shrink: 0; }
+    .login-note { color: var(--text-dim); font-size: 0.78rem; margin-top: 1.5rem; line-height: 1.6; }
+    .divider { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0; color: var(--text-dim); font-size: 0.8rem; }
+    .divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--glass-border); }
+    .back-link { color: var(--text-dim); font-size: 0.85rem; transition: color 0.2s; }
+    .back-link:hover { color: var(--teal); }
+    #error-msg { color: var(--red); font-size: 0.85rem; margin-top: 1rem; display: none; }
+    @keyframes scaleIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+  </style>
+</head>
+<body>
+  <div class="bg-mesh"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav>
+    <a class="nav-logo" href="index.html">Risk<span>Lens</span></a>
+  </nav>
+
+  <div class="page login-wrap">
+    <div class="login-card">
+      <div class="login-logo">Risk<span>Lens</span></div>
+      <div class="login-tagline">AI-Powered Health Screener</div>
+
+      <div class="login-title">Sign in to continue</div>
+      <div class="login-sub">Screen for 6 diseases in under 2 minutes</div>
+
+      <button class="btn-google" id="btn-google">
+        <svg width="20" height="20" viewBox="0 0 48 48">
+          <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.9z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19.1 13 24 13c3.1 0 5.8 1.1 8 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+          <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8H6.3C9.7 35.7 16.3 44 24 44z"/>
+          <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.1-2.2 3.9-4 5.2l6.2 5.2C43 35.2 44 30 44 24c0-1.3-.1-2.7-.4-3.9z"/>
+        </svg>
+        Continue with Google
+      </button>
+
+      <div id="error-msg"></div>
+
+      <div class="login-note">
+        We only use your email to identify your session.<br/>
+        Your health data is never stored or shared.
+      </div>
+
+      <div class="divider">or</div>
+      <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { signInWithGoogle, onAuth } from './js/firebase.js';
+
+    // If already logged in → go to form
+    onAuth(user => {
+      if (user) window.location.href = 'form.html';
+    });
+
+    document.getElementById('btn-google').addEventListener('click', async () => {
+      const btn = document.getElementById('btn-google');
+      const err = document.getElementById('error-msg');
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+      err.style.display = 'none';
+      try {
+        await signInWithGoogle();
+        window.location.href = 'form.html';
+      } catch (e) {
+        err.textContent = 'Sign-in failed: ' + (e.message || 'Please try again.');
+        err.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19.1 13 24 13c3.1 0 5.8 1.1 8 2.9l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8H6.3C9.7 35.7 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.1-2.2 3.9-4 5.2l6.2 5.2C43 35.2 44 30 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg> Continue with Google`;
+      }
+    });
+  </script>
+</body>
+</html>
