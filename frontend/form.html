@@ -13,7 +13,6 @@
     .form-header p { color: var(--text-dim); font-size: 0.92rem; margin-top: 0.4rem; }
     .progress-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 0.4rem; }
     .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.25rem; }
-    .full-width { grid-column: 1 / -1; }
     @media(max-width:600px){ .fields-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -63,13 +62,15 @@
         <div class="fields-grid">
           <div class="form-group">
             <label class="form-label">Age</label>
-            <input type="number" class="form-control" id="age" min="1" max="120" placeholder="e.g. 35" required/>
+            <input type="number" class="form-control" id="age"
+              min="1" max="120" placeholder="e.g. 35" required/>
           </div>
           <div class="form-group">
             <label class="form-label">Gender</label>
             <select class="form-control" id="Gender" required>
               <option value="">Select…</option>
-              <option>Male</option><option>Female</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
             </select>
           </div>
         </div>
@@ -80,28 +81,34 @@
             <label class="form-label">Smoking</label>
             <select class="form-control" id="Smoking" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Alcohol</label>
             <select class="form-control" id="Alcohol" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Physical Activity</label>
             <select class="form-control" id="PhysicalActivity" required>
               <option value="">Select…</option>
-              <option>Low</option><option>Moderate</option><option>High</option>
+              <option value="Low">Low</option>
+              <option value="Moderate">Moderate</option>
+              <option value="High">High</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Diet Quality</label>
             <select class="form-control" id="DietQuality" required>
               <option value="">Select…</option>
-              <option>Poor</option><option>Average</option><option>Good</option>
+              <option value="Poor">Poor</option>
+              <option value="Average">Average</option>
+              <option value="Good">Good</option>
             </select>
           </div>
         </div>
@@ -112,14 +119,17 @@
             <label class="form-label">Blood Pressure</label>
             <select class="form-control" id="BloodPressure" required>
               <option value="">Select…</option>
-              <option>Normal</option><option>Elevated</option><option>High</option>
+              <option value="Normal">Normal</option>
+              <option value="Elevated">Elevated</option>
+              <option value="High">High</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Sugar Level</label>
             <select class="form-control" id="SugarLevel" required>
               <option value="">Select…</option>
-              <option>Normal</option><option>High</option>
+              <option value="Normal">Normal</option>
+              <option value="High">High</option>
             </select>
           </div>
         </div>
@@ -130,77 +140,88 @@
             <label class="form-label">Frequent Urination</label>
             <select class="form-control" id="FrequentUrination" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Excessive Thirst</label>
             <select class="form-control" id="ExcessiveThirst" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Fatigue</label>
             <select class="form-control" id="Fatigue" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Chest Pain</label>
             <select class="form-control" id="ChestPain" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Swelling in Ankles</label>
             <select class="form-control" id="SwellingAnkles" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Wheezing</label>
             <select class="form-control" id="Wheezing" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Breathlessness</label>
             <select class="form-control" id="Breathlessness" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Cough</label>
             <select class="form-control" id="Cough" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Pale Skin</label>
             <select class="form-control" id="PaleSkin" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Weight Loss</label>
             <select class="form-control" id="WeightLoss" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Dizziness</label>
             <select class="form-control" id="Dizziness" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
         </div>
@@ -211,20 +232,23 @@
             <label class="form-label">Diabetes in Family</label>
             <select class="form-control" id="FamilyHistoryDiabetes" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
           <div class="form-group">
             <label class="form-label">Heart Disease in Family</label>
             <select class="form-control" id="FamilyHistoryHeart" required>
               <option value="">Select…</option>
-              <option>Yes</option><option>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
             </select>
           </div>
         </div>
 
         <div class="mt-3">
-          <button type="submit" class="btn-primary w-full" style="font-size:1.05rem;padding:1rem;">
+          <button type="submit" class="btn-primary w-full"
+            style="font-size:1.05rem;padding:1rem;">
             Analyse My Health →
           </button>
         </div>
@@ -235,14 +259,19 @@
   <script type="module">
     import { onAuth, logOut } from './js/firebase.js';
 
-    const API = 'https://BEASTZZZ-risk123lens.hf.space/predict';
-    const FIELDS = ['Gender','Smoking','Alcohol','PhysicalActivity','DietQuality','BloodPressure',
-      'SugarLevel','FrequentUrination','ExcessiveThirst','Fatigue','ChestPain','SwellingAnkles',
-      'Wheezing','Breathlessness','Cough','PaleSkin','WeightLoss','Dizziness',
-      'FamilyHistoryDiabetes','FamilyHistoryHeart'];
+    // ── CORRECT BACKEND URL (all lowercase) ───────────────────────────────────
+    const API = 'https://beastzzz-risk123lens.hf.space/predict';
+
+    const FIELDS = [
+      'Gender','Smoking','Alcohol','PhysicalActivity','DietQuality',
+      'BloodPressure','SugarLevel','FrequentUrination','ExcessiveThirst',
+      'Fatigue','ChestPain','SwellingAnkles','Wheezing','Breathlessness',
+      'Cough','PaleSkin','WeightLoss','Dizziness',
+      'FamilyHistoryDiabetes','FamilyHistoryHeart'
+    ];
     const TOTAL = FIELDS.length + 1; // +1 for age
 
-    // Auth guard
+    // ── Auth guard ────────────────────────────────────────────────────────────
     onAuth(user => {
       if (!user) { window.location.href = 'login.html'; return; }
       const photo = document.getElementById('user-photo');
@@ -251,16 +280,18 @@
       name.textContent = user.displayName || user.email;
     });
 
-    // Sign out
+    // ── Sign out ──────────────────────────────────────────────────────────────
     document.getElementById('btn-signout').addEventListener('click', async () => {
       await logOut();
       window.location.href = 'login.html';
     });
 
-    // Progress
+    // ── Progress bar ──────────────────────────────────────────────────────────
     function updateProgress() {
       let filled = document.getElementById('age').value ? 1 : 0;
-      FIELDS.forEach(id => { if (document.getElementById(id)?.value) filled++; });
+      FIELDS.forEach(id => {
+        if (document.getElementById(id)?.value) filled++;
+      });
       const pct = Math.round((filled / TOTAL) * 100);
       document.getElementById('progress-bar').style.width = pct + '%';
       document.getElementById('progress-pct').textContent = pct + '%';
@@ -268,31 +299,55 @@
     document.getElementById('health-form').addEventListener('change', updateProgress);
     document.getElementById('age').addEventListener('input', updateProgress);
 
-    // Submit
+    // ── Submit ────────────────────────────────────────────────────────────────
     document.getElementById('health-form').addEventListener('submit', async e => {
       e.preventDefault();
-      const age = parseInt(document.getElementById('age').value);
-      if (!age || age < 1 || age > 120) { alert('Please enter a valid age.'); return; }
 
+      // Validate age
+      const age = parseInt(document.getElementById('age').value);
+      if (!age || age < 1 || age > 120) {
+        alert('Please enter a valid age between 1 and 120.');
+        return;
+      }
+
+      // Validate all fields filled
+      const empty = FIELDS.filter(id => !document.getElementById(id)?.value);
+      if (empty.length > 0) {
+        alert('Please fill all fields before submitting.');
+        return;
+      }
+
+      // Build request body — values are already correct from select option values
       const body = { age };
-      FIELDS.forEach(id => body[id] = document.getElementById(id).value);
+      FIELDS.forEach(id => {
+        body[id] = document.getElementById(id).value;
+      });
 
       // Show loader
       document.getElementById('loader').classList.add('show');
 
       try {
-        const res  = await fetch(API, {
-          method: 'POST',
+        const res = await fetch(API, {
+          method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
+          body:    JSON.stringify(body)
         });
-        if (!res.ok) throw new Error('API error ' + res.status);
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(
+            `API returned ${res.status}. ` +
+            (errData.detail || 'Please check all fields and try again.')
+          );
+        }
+
         const data = await res.json();
         localStorage.setItem('risklens_report', JSON.stringify(data));
         window.location.href = 'report.html';
+
       } catch (err) {
         document.getElementById('loader').classList.remove('show');
-        alert('Error: ' + err.message + '\n\nMake sure the backend is running at:\nhttps://BEASTZZZ-risk123lens.hf.space');
+        alert('Something went wrong:\n\n' + err.message);
       }
     });
   </script>
