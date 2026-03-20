@@ -2,23 +2,23 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# System deps for pgmpy/scikit-learn compilation
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files
 COPY . .
 
-# Train models at build time — saved to models/artifacts.pkl
+# Step 1 — Train ML models
 RUN python train.py
 
-# Hugging Face Spaces requires port 7860
+# Step 2 — Build ChromaDB vector store from knowledge base
+RUN python -c "from local_chatbot import build_vector_store; build_vector_store()"
+
+# Step 3 — Pre-download Flan-T5 so first request is instant
+RUN python -c "from transformers import pipeline; pipeline('text2text-generation', model='google/flan-t5-base'); print('Flan-T5 cached')"
+
 ENV PORT=7860
 EXPOSE 7860
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1"]
