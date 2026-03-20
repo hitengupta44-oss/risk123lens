@@ -8,28 +8,124 @@
   <style>
     .report-page { padding: 6rem 1.5rem 4rem; }
     .report-container { max-width: 960px; margin: 0 auto; }
-    .report-header { margin-bottom: 2.5rem; }
+    .report-header { margin-bottom: 2rem; }
     .report-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
     .report-meta { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 0.5rem; }
     .meta-badge {
-      background: var(--teal-dim);
-      border: 1px solid rgba(0,212,170,0.3);
-      color: var(--teal);
-      font-size: 0.78rem;
-      font-weight: 600;
-      padding: 0.25rem 0.8rem;
-      border-radius: 999px;
+      background: var(--teal-dim); border: 1px solid rgba(0,212,170,0.3);
+      color: var(--teal); font-size: 0.78rem; font-weight: 600;
+      padding: 0.25rem 0.8rem; border-radius: 999px;
     }
     .report-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
     .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
     @media(max-width:700px){ .cards-grid { grid-template-columns: 1fr; } }
 
+    /* ── CHATBOT ─────────────────────────────────────────────────────────── */
+    #chat-fab {
+      position: fixed; bottom: 2rem; right: 2rem;
+      width: 58px; height: 58px; border-radius: 50%;
+      background: var(--teal); border: none; cursor: pointer;
+      font-size: 1.5rem; box-shadow: 0 0 24px rgba(0,212,170,0.45);
+      z-index: 900; transition: transform 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #chat-fab:hover { transform: scale(1.08); }
+
+    #chat-window {
+      position: fixed; bottom: 6.5rem; right: 2rem;
+      width: 340px; height: 460px;
+      background: #111827;
+      border: 1px solid rgba(0,212,170,0.2);
+      border-radius: 18px;
+      display: none; flex-direction: column;
+      z-index: 900; overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+    #chat-window.open { display: flex; }
+
+    .chat-header {
+      padding: 1rem 1.1rem 0.8rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+    .chat-header-title {
+      font-family: var(--font-head); font-weight: 700;
+      font-size: 0.95rem; color: var(--teal);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .chat-header-sub { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.15rem; }
+
+    #chat-messages {
+      flex: 1; overflow-y: auto; padding: 0.9rem;
+      display: flex; flex-direction: column; gap: 0.65rem;
+      scrollbar-width: thin; scrollbar-color: rgba(0,212,170,0.2) transparent;
+    }
+
+    .msg {
+      padding: 0.6rem 0.85rem; border-radius: 12px;
+      font-size: 0.83rem; line-height: 1.55; max-width: 88%;
+    }
+    .msg.user {
+      background: rgba(0,212,170,0.15);
+      border: 1px solid rgba(0,212,170,0.2);
+      align-self: flex-end; color: var(--text);
+    }
+    .msg.bot {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      align-self: flex-start; color: var(--text);
+    }
+    .msg.typing { opacity: 0.55; font-style: italic; }
+
+    .chat-sources {
+      font-size: 0.7rem; color: var(--text-dim);
+      margin-top: 0.3rem; padding-left: 0.2rem;
+    }
+
+    .chat-footer {
+      padding: 0.7rem; border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex; gap: 0.5rem; flex-shrink: 0;
+    }
+    #chat-input {
+      flex: 1; background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; padding: 0.5rem 0.75rem;
+      color: var(--text); font-size: 0.85rem;
+      font-family: var(--font-body); outline: none;
+      transition: border-color 0.2s;
+    }
+    #chat-input:focus { border-color: var(--teal); }
+    #chat-send {
+      background: var(--teal); border: none; border-radius: 8px;
+      padding: 0.5rem 0.85rem; cursor: pointer;
+      font-size: 1rem; color: var(--navy); transition: opacity 0.2s;
+    }
+    #chat-send:hover { opacity: 0.85; }
+    #chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* suggested questions */
+    .chat-suggestions {
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      padding: 0.5rem 0.9rem 0.6rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+    .suggestion-btn {
+      background: rgba(0,212,170,0.07);
+      border: 1px solid rgba(0,212,170,0.2);
+      border-radius: 999px; color: var(--teal);
+      font-size: 0.7rem; padding: 0.25rem 0.65rem;
+      cursor: pointer; transition: background 0.2s;
+      font-family: var(--font-body);
+    }
+    .suggestion-btn:hover { background: rgba(0,212,170,0.15); }
+
     /* Print */
     @media print {
-      .bg-mesh,.orb,nav,.report-actions,#btn-retake { display:none!important; }
+      .bg-mesh,.orb,nav,.report-actions,#chat-fab,#chat-window { display:none!important; }
       body { background:#fff; color:#000; }
-      .disease-card { page-break-inside:avoid; border:1px solid #ccc!important; opacity:1!important; transform:none!important; }
-      .risk-bar-fill { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+      .disease-card { page-break-inside:avoid; border:1px solid #ccc!important;
+        opacity:1!important; transform:none!important; }
     }
   </style>
 </head>
@@ -59,8 +155,10 @@
           <span class="text-dim" style="font-size:0.85rem" id="report-date"></span>
         </div>
         <div class="report-actions">
-          <button class="btn-primary" onclick="window.print()" style="padding:0.6rem 1.4rem;font-size:0.9rem;">⬇ Download PDF</button>
-          <button class="btn-outline" id="btn-retake" style="padding:0.6rem 1.4rem;font-size:0.9rem;">↩ Retake Assessment</button>
+          <button class="btn-primary" onclick="window.print()"
+            style="padding:0.6rem 1.4rem;font-size:0.9rem;">⬇ Download PDF</button>
+          <button class="btn-outline" id="btn-retake"
+            style="padding:0.6rem 1.4rem;font-size:0.9rem;">↩ Retake</button>
         </div>
       </div>
 
@@ -73,18 +171,48 @@
     </div>
   </div>
 
+  <!-- ── CHATBOT ──────────────────────────────────────────────────────────── -->
+  <button id="chat-fab" onclick="toggleChat()" title="Ask RiskLens AI">💬</button>
+
+  <div id="chat-window">
+    <div class="chat-header">
+      <div class="chat-header-title">🤖 RiskLens AI Assistant</div>
+      <div class="chat-header-sub">Ask about your results — answers from medical knowledge base</div>
+    </div>
+
+    <!-- Suggested questions -->
+    <div class="chat-suggestions" id="suggestions"></div>
+
+    <div id="chat-messages">
+      <div class="msg bot">
+        Hi! I'm your RiskLens health assistant. Ask me anything about your
+        screened conditions — symptoms, diet, precautions, or lifestyle tips. 🏥
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <input id="chat-input" type="text" placeholder="Ask about your health results…"
+        onkeydown="if(event.key==='Enter' && !event.shiftKey) sendChat()"/>
+      <button id="chat-send" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+
   <script type="module">
     import { onAuth, logOut } from './js/firebase.js';
 
+    // ── CONFIG ────────────────────────────────────────────────────────────────
+    const API_BASE = 'https://beastzzz-risk123lens.hf.space';
+
     const ICONS = {
-      Diabetes:'🧬', HeartDisease:'❤️', CKD:'💧', Asthma:'🫁', Dyslipidemia:'📊', Anemia:'🩸'
+      Diabetes:'🧬', HeartDisease:'❤️', CKD:'💧',
+      Asthma:'🫁', Dyslipidemia:'📊', Anemia:'🩸'
     };
     const NAMES = {
       Diabetes:'Diabetes', HeartDisease:'Heart Disease', CKD:'CKD',
       Asthma:'Asthma', Dyslipidemia:'Dyslipidemia', Anemia:'Anemia'
     };
 
-    // Auth guard
+    // ── AUTH ──────────────────────────────────────────────────────────────────
     onAuth(user => {
       if (!user) { window.location.href = 'login.html'; return; }
       const photo = document.getElementById('user-photo');
@@ -94,6 +222,7 @@
     });
 
     document.getElementById('btn-signout').addEventListener('click', async () => {
+      const { logOut } = await import('./js/firebase.js');
       await logOut(); window.location.href = 'login.html';
     });
 
@@ -102,22 +231,28 @@
       window.location.href = 'form.html';
     });
 
-    // Load report
+    // ── LOAD REPORT ───────────────────────────────────────────────────────────
     const raw = localStorage.getItem('risklens_report');
     if (!raw) { window.location.href = 'form.html'; }
 
-    const report = JSON.parse(raw);
+    const report  = JSON.parse(raw);
     const { age_group, results } = report;
+
+    // Store globally for chatbot
+    window._diseases   = results.map(r => r.disease);
+    window._riskScores = {};
+    results.forEach(r => window._riskScores[r.disease] = r.risk_percent);
 
     // Header
     document.getElementById('age-group-badge').textContent = age_group + ' Adult';
     document.getElementById('report-date').textContent =
-      'Assessed: ' + new Date().toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
+      'Assessed: ' + new Date().toLocaleDateString('en-IN',
+        { day:'numeric', month:'long', year:'numeric' });
 
     // Summary pills
     const pillRow = document.getElementById('summary-pills');
     results.forEach(r => {
-      const lvl = r.risk_percent < 40 ? 'low' : r.risk_percent < 60 ? 'medium' : 'high';
+      const lvl  = r.risk_percent < 40 ? 'low' : r.risk_percent < 60 ? 'medium' : 'high';
       const pill = document.createElement('span');
       pill.className = 'pill ' + lvl;
       pill.textContent = (ICONS[r.disease]||'') + ' ' + (NAMES[r.disease]||r.disease);
@@ -126,21 +261,19 @@
 
     // Disease cards
     const grid = document.getElementById('cards-grid');
-
     results.forEach((r, i) => {
-      const lvl = r.risk_percent < 40 ? 'low' : r.risk_percent < 60 ? 'medium' : 'high';
-      const cls = lvl === 'low' ? 'risk-low' : lvl === 'medium' ? 'risk-medium' : 'risk-high';
+      const lvl  = r.risk_percent < 40 ? 'low' : r.risk_percent < 60 ? 'medium' : 'high';
+      const cls  = lvl === 'low' ? 'risk-low' : lvl === 'medium' ? 'risk-medium' : 'risk-high';
       const icon = ICONS[r.disease] || '🏥';
       const name = NAMES[r.disease] || r.disease;
 
-      // Contributing factors HTML
       const factors = r.contributing_factors || {};
       const factorRows = Object.entries(factors).map(([f, d]) => {
-        const cls2 = d > 0 ? 'factor-positive' : 'factor-negative';
-        const arrow = d > 0 ? '▲' : '▼';
+        const fc  = d > 0 ? 'factor-positive' : 'factor-negative';
+        const arr = d > 0 ? '▲' : '▼';
         return `<div class="factor-row">
           <span>${f.replace(/([A-Z])/g,' $1').trim()}</span>
-          <span class="${cls2}">${arrow} ${Math.abs(d).toFixed(1)}%</span>
+          <span class="${fc}">${arr} ${Math.abs(d).toFixed(1)}%</span>
         </div>`;
       }).join('');
 
@@ -152,44 +285,136 @@
           <div class="disease-name">${icon} ${name}</div>
           <div class="meta-badge">${r.risk_band}%</div>
         </div>
-        <div class="disease-risk-pct ${cls}" id="pct-${i}">${r.risk_percent}%</div>
+        <div class="disease-risk-pct ${cls}">${r.risk_percent}%</div>
         <div class="risk-bar-track">
           <div class="risk-bar-fill ${lvl}" id="bar-${i}" style="width:0%"></div>
         </div>
         <div style="font-size:0.78rem;color:var(--text-dim);margin-top:0.3rem;">
-          ${lvl === 'low' ? '🟢 Low Risk' : lvl === 'medium' ? '🟡 Moderate Risk' : '🔴 High Risk'}
+          ${lvl==='low'?'🟢 Low Risk':lvl==='medium'?'🟡 Moderate Risk':'🔴 High Risk'}
         </div>
         <div class="rec-box">
-          <span>🩺</span>
-          <span>${r.recommendation}</span>
+          <span>🩺</span><span>${r.recommendation}</span>
         </div>
         <button class="accordion-btn" onclick="toggleAccordion(this)">
           Why this risk? <span>▾</span>
         </button>
         <div class="accordion-content">
           <div style="padding:0.75rem 0">
-            ${factorRows || '<span style="color:var(--text-dim);font-size:0.82rem">No factor data available.</span>'}
+            ${factorRows || '<span style="color:var(--text-dim);font-size:0.82rem">No data.</span>'}
           </div>
-        </div>
-      `;
+        </div>`;
       grid.appendChild(card);
 
-      // Animate card in after delay
       setTimeout(() => {
         card.classList.add('visible');
-        // Animate risk bar
         setTimeout(() => {
-          document.getElementById('bar-' + i).style.width = Math.min(r.risk_percent, 100) + '%';
+          document.getElementById('bar-' + i).style.width =
+            Math.min(r.risk_percent, 100) + '%';
         }, 200);
       }, i * 120 + 100);
     });
 
-    // Accordion toggle
+    // Suggested questions based on high-risk diseases
+    const highRisk = results.filter(r => r.risk_percent > 50);
+    const suggestions = [];
+    if (highRisk.find(r => r.disease === 'Diabetes'))
+      suggestions.push('What foods should I avoid for diabetes?');
+    if (highRisk.find(r => r.disease === 'HeartDisease'))
+      suggestions.push('How can I reduce heart disease risk?');
+    if (highRisk.find(r => r.disease === 'Anemia'))
+      suggestions.push('What should I eat for anemia?');
+    if (highRisk.find(r => r.disease === 'CKD'))
+      suggestions.push('What foods are safe for kidneys?');
+    if (highRisk.find(r => r.disease === 'Asthma'))
+      suggestions.push('What triggers asthma attacks?');
+    if (highRisk.find(r => r.disease === 'Dyslipidemia'))
+      suggestions.push('How do I lower my cholesterol?');
+    if (suggestions.length === 0)
+      suggestions.push('How can I maintain my low risk?', 'What lifestyle changes help?');
+
+    const suggBox = document.getElementById('suggestions');
+    suggestions.slice(0, 3).forEach(q => {
+      const btn = document.createElement('button');
+      btn.className = 'suggestion-btn';
+      btn.textContent = q;
+      btn.onclick = () => {
+        document.getElementById('chat-input').value = q;
+        sendChat();
+      };
+      suggBox.appendChild(btn);
+    });
+
+    // ── ACCORDION ─────────────────────────────────────────────────────────────
     window.toggleAccordion = (btn) => {
-      const content = btn.nextElementSibling;
-      content.classList.toggle('open');
-      btn.querySelector('span').textContent = content.classList.contains('open') ? '▴' : '▾';
+      const c = btn.nextElementSibling;
+      c.classList.toggle('open');
+      btn.querySelector('span').textContent = c.classList.contains('open') ? '▴' : '▾';
     };
+
+    // ── CHATBOT ───────────────────────────────────────────────────────────────
+    window.toggleChat = () => {
+      document.getElementById('chat-window').classList.toggle('open');
+      if (document.getElementById('chat-window').classList.contains('open')) {
+        document.getElementById('chat-input').focus();
+      }
+    };
+
+    window.sendChat = async () => {
+      const input = document.getElementById('chat-input');
+      const msg   = input.value.trim();
+      if (!msg) return;
+
+      addMsg(msg, 'user');
+      input.value = '';
+
+      const send = document.getElementById('chat-send');
+      send.disabled = true;
+      const typing = addMsg('Thinking…', 'bot', true);
+
+      try {
+        const res = await fetch(`${API_BASE}/chat`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message:     msg,
+            diseases:    window._diseases   || [],
+            risk_scores: window._riskScores || {},
+            history:     []
+          })
+        });
+
+        if (!res.ok) throw new Error('API error ' + res.status);
+        const data = await res.json();
+        typing.remove();
+
+        const botDiv = addMsg(data.reply, 'bot');
+
+        // Show sources if available
+        if (data.sources && data.sources.length > 0) {
+          const src = document.createElement('div');
+          src.className = 'chat-sources';
+          src.textContent = '📚 Sources: ' + data.sources.join(' · ');
+          botDiv.appendChild(src);
+        }
+
+      } catch (err) {
+        typing.remove();
+        addMsg('Sorry, I could not connect to the assistant. Please try again.', 'bot');
+      } finally {
+        send.disabled = false;
+        input.focus();
+      }
+    };
+
+    function addMsg(text, role, isTyping = false) {
+      const box = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = `msg ${role}${isTyping ? ' typing' : ''}`;
+      div.textContent = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+      return div;
+    }
   </script>
 </body>
 </html>
