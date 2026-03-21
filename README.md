@@ -36,10 +36,12 @@ Risk %	Band	Colour	Action
 61 – 80%	High	🔴 Red	Prompt medical consultation
 81 – 100%	Very High	🔴 Red	Urgent medical attention
 
-<img width="1916" height="876" alt="image" src="https://github.com/user-attachments/assets/526ee259-be23-4cb4-b89b-67a0594162a6" />
+<img width="1918" height="863" alt="image" src="https://github.com/user-attachments/assets/d8ea524b-b16b-4f21-b4ff-88087763490b" />
 
-<img width="1918" height="873" alt="image" src="https://github.com/user-attachments/assets/fd84a968-d3fe-4538-bb3b-c7c75c18905b" />
+<img width="1918" height="862" alt="image" src="https://github.com/user-attachments/assets/d518dd8f-5784-4176-bc3d-ecb1995dd324" />
 
-<img width="1918" height="871" alt="image" src="https://github.com/user-attachments/assets/c333b49f-11d1-4472-94b7-38368b3d9a8d" />
+<img width="1918" height="868" alt="image" src="https://github.com/user-attachments/assets/54f11cd3-f507-4d28-83b7-521b238f1676" />
 
+<img width="1918" height="865" alt="image" src="https://github.com/user-attachments/assets/c548b20f-9982-476f-b7e2-3f826a30d89f" />
 
+Prototype: https://risklens123.vercel.app/
